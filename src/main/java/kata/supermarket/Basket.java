@@ -1,5 +1,7 @@
 package kata.supermarket;
 
+import kata.supermarket.models.Item;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
@@ -8,8 +10,9 @@ import java.util.List;
 
 public class Basket {
     private final List<Item> items;
-
-    public Basket() {
+    private final List<Discount> discounts;
+    public Basket(List<Discount> discounts) {
+        this.discounts = discounts;
         this.items = new ArrayList<>();
     }
 
@@ -27,8 +30,9 @@ public class Basket {
 
     private class TotalCalculator {
         private final List<Item> items;
-
+        private final DiscountAggregator discountAggregator;
         TotalCalculator() {
+            this.discountAggregator = new DiscountAggregator(discounts);
             this.items = items();
         }
 
@@ -46,12 +50,12 @@ public class Basket {
          *  Think about how Basket could interact with something
          *  which provides that functionality.
          */
-        private BigDecimal discounts() {
-            return BigDecimal.ZERO;
+        private BigDecimal discounts(List<Item> items) {
+            return discountAggregator.applyDiscounts(items);
         }
 
         private BigDecimal calculate() {
-            return subtotal().subtract(discounts());
+            return subtotal().subtract(discounts(items));
         }
     }
 }
