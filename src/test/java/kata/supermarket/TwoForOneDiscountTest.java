@@ -10,7 +10,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
-import java.util.Collections;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -27,17 +28,18 @@ public class TwoForOneDiscountTest {
 
     private static Stream<Arguments> basketProvidesTotalValue() {
         return Stream.of(
-                aSingleItemPricedPerUnit(),
-                twoForOneDiscountedItems()
+                customItemsPricedPerUnit(1, "0.49"),
+                customItemsPricedPerUnit(2, "0.49"),
+                customItemsPricedPerUnit(3, "0.98"),
+                customItemsPricedPerUnit(10, "2.45")
         );
     }
 
-    private static Arguments aSingleItemPricedPerUnit() {
-        return Arguments.of("a single item priced per unit", "0.49", Collections.singleton(aPintOfMilk()));
-    }
-
-    private static Arguments twoForOneDiscountedItems() {
-        return Arguments.of("2 items priced per unit with 2 for 1 discount", "0.49", Arrays.asList(aPintOfMilk(), aPintOfMilk()));
+    private static Arguments customItemsPricedPerUnit(int size, String expectedTotal) {
+        return Arguments.of(
+                size + "item(s) priced per unit",
+                expectedTotal,
+                IntStream.range(0, size).mapToObj(x -> aPintOfMilk()).collect(Collectors.toList()));
     }
 
     private static Item aPintOfMilk() {
