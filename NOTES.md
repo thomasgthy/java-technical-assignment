@@ -1,3 +1,5 @@
 # Notes
 
-Please add here any notes, assumptions and design decisions that might help us understand your thought process.
+* Started by creating a Discount interface that would be implemented by the various discounts
+* Each discount would implement interface and its own applyDiscount function
+* DiscountAggregator would aggregate all discounts for a list of items 
